@@ -69,7 +69,6 @@ void TrajoptPickAndPlaceConstructor::addLinearMotion(trajopt::ProblemConstructio
          . Set the correct time step for this pose
          . Set the pose xyz translation
     */
-    /* ========  ENTER CODE HERE ======== */
     std::shared_ptr<CartPoseTermInfo> pose_constraint = std::shared_ptr<CartPoseTermInfo>(new CartPoseTermInfo);
     pose_constraint->term_type = TT_CNT;
     pose_constraint->link = ee_link_;
@@ -89,7 +88,6 @@ void TrajoptPickAndPlaceConstructor::addLinearMotion(trajopt::ProblemConstructio
          . Define the pose name as pose_[timestep]
          . pushback the constraint to cnt_infos
     */
-    /* ========  ENTER CODE HERE ======== */
     pose_constraint->wxyz = Vector4d(rotation.w(), rotation.x(), rotation.y(), rotation.z());
     pose_constraint->pos_coeffs = Vector3d(10.0, 10.0, 10.0);
     pose_constraint->rot_coeffs = Vector3d(10.0, 10.0, 10.0);
@@ -102,11 +100,7 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePickProblem(Isometry3d& a
                                                                    Isometry3d& final_pose,
                                                                    int steps_per_phase)
 {
-  //---------------------------------------------------------
-  // ---------------- Fill Basic Info -----------------------
-  //---------------------------------------------------------
   trajopt::ProblemConstructionInfo pci(env_);
-  // Add kinematics
   pci.kin = kin_;
 
   /* Fill Code: Define the basic info
@@ -117,17 +111,12 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePickProblem(Isometry3d& a
        . Set dt upper limit
        . Set use_time to false
   */
-  /* ========  ENTER CODE HERE ======== */
   pci.basic_info.n_steps = steps_per_phase * 2;
   pci.basic_info.manip = manipulator_;
   pci.basic_info.dt_lower_lim = 0.2;
   pci.basic_info.dt_upper_lim = .5;
   pci.basic_info.start_fixed = true;
   pci.basic_info.use_time = false;
-
-  //---------------------------------------------------------
-  // ---------------- Fill Init Info ------------------------
-  //---------------------------------------------------------
 
   // To use JOINT_INTERPOLATED - a linear interpolation of joint values
   //  pci.init_info.type = InitInfo::JOINT_INTERPOLATED;
@@ -137,12 +126,6 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePickProblem(Isometry3d& a
   // To use STATIONARY - all jnts initialized to the starting value
   pci.init_info.type = InitInfo::STATIONARY;
   pci.init_info.dt = 0.5;
-
-  //---------------------------------------------------------
-  // ---------------- Fill Term Infos -----------------------
-  //---------------------------------------------------------
-
-  // ================= Collision cost =======================
   std::shared_ptr<CollisionTermInfo> collision(new CollisionTermInfo);
   /* Fill Code:
        . Define the cost name
@@ -152,7 +135,6 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePickProblem(Isometry3d& a
        . Define the last time step
        . Set the cost gap to be 1
   */
-  /* ========  ENTER CODE HERE ======== */
   collision->name = "collision";
   collision->term_type = TT_COST;
   collision->continuous = true;
@@ -162,8 +144,6 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePickProblem(Isometry3d& a
   collision->info = createSafetyMarginDataVector(pci.basic_info.n_steps, 0.025, 40);
 
   pci.cost_infos.push_back(collision);
-
-  // ================= Velocity cost =======================
   std::shared_ptr<JointVelTermInfo> jv(new JointVelTermInfo);
 
   // Taken from iiwa documentation (radians/s) and scaled by 0.8
@@ -181,7 +161,6 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePickProblem(Isometry3d& a
        . Define vector of coefficients. Length = DOF. Value = 5
        . Define the term name
   */
-  /* ========  ENTER CODE HERE ======== */
   jv->term_type = TT_COST;
   jv->first_step = 0;
   jv->last_step = pci.basic_info.n_steps - 1;
@@ -190,8 +169,6 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePickProblem(Isometry3d& a
   jv->name = "joint_velocity_cost";
 
   pci.cost_infos.push_back(jv);
-
-  // ================= Path waypoints =======================
   this->addLinearMotion(pci, approach_pose, final_pose, steps_per_phase, steps_per_phase);
 
   TrajOptProbPtr result = ConstructProblem(pci);
@@ -203,11 +180,7 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePlaceProblem(Isometry3d& 
                                                                     Isometry3d& final_pose,
                                                                     int steps_per_phase)
 {
-  //---------------------------------------------------------
-  // ---------------- Fill Basic Info -----------------------
-  //---------------------------------------------------------
   trajopt::ProblemConstructionInfo pci(env_);
-  // Add kinematics
   pci.kin = kin_;
 
   /* Fill Code: Define the basic info
@@ -218,17 +191,12 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePlaceProblem(Isometry3d& 
        . Set the start_fixed to false
        . Set use_time to false
   */
-  /* ========  ENTER CODE HERE ======== */
   pci.basic_info.n_steps = steps_per_phase * 3;
   pci.basic_info.manip = manipulator_;
   pci.basic_info.dt_lower_lim = 0.005;
   pci.basic_info.dt_upper_lim = .5;
   pci.basic_info.start_fixed = true;
   pci.basic_info.use_time = false;
-
-  //---------------------------------------------------------
-  // ---------------- Fill Init Info ------------------------
-  //---------------------------------------------------------
 
   // To use JOINT_INTERPOLATED - a linear interpolation of joint values
   //  pci.init_info.type = InitInfo::JOINT_INTERPOLATED;
@@ -239,11 +207,6 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePlaceProblem(Isometry3d& 
   pci.init_info.type = InitInfo::STATIONARY;
   pci.init_info.dt = 0.5;
 
-  //---------------------------------------------------------
-  // ---------------- Fill Term Infos -----------------------
-  //---------------------------------------------------------
-
-  // ================= Collision cost =======================
   std::shared_ptr<CollisionTermInfo> collision(new CollisionTermInfo);
   /* Fill Code:
        . Define the cost name
@@ -253,7 +216,6 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePlaceProblem(Isometry3d& 
        . Define the last time step
        . Set the cost gap to be 1
   */
-  /* ========  ENTER CODE HERE ======== */
   collision->name = "collision";
   collision->term_type = TT_COST;
   collision->continuous = true;
@@ -282,12 +244,11 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePlaceProblem(Isometry3d& 
        . Define vector of coefficients. Length = DOF. Value = 5
        . Define the term name
   */
-  /* ========  ENTER CODE HERE ======== */
   jv->term_type = TT_COST;
   jv->first_step = 0;
   jv->last_step = pci.basic_info.n_steps - 1;
   jv->targets = std::vector<double>(7, 0.0);
-  jv->coeffs = std::vector<double>(7, 5.0);
+  jv->coeffs = std::vector<double>(7, 12.0);
   jv->name = "joint_velocity_cost";
 
   pci.cost_infos.push_back(jv);
@@ -304,7 +265,6 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePlaceProblem(Isometry3d& 
        . Add linear motion from start_pose to retreat_pose (hint: Use the helpers defined above)
        . Add linear motion from approach_pose to final_pose
   */
-  /* ========  ENTER CODE HERE ======== */
   this->addLinearMotion(pci, start_pose, retreat_pose, steps_per_phase, 0);
 
   this->addLinearMotion(pci, approach_pose, final_pose, steps_per_phase, steps_per_phase * 2);

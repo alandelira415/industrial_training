@@ -116,6 +116,7 @@ int main(int argc, char** argv)
   {
     tf::poseMsgToEigen(srv.response.target_pose, world_to_box);
     plan &= srv.response.succeeded;
+    ROS_INFO("plan success= %d", plan);
     box_size_x = srv.response.max_pt.x - srv.response.min_pt.x;
     box_size_y = srv.response.max_pt.y - srv.response.min_pt.y;
     box_size_z = srv.response.max_pt.z - 0.77153;  // Subtract off table height
