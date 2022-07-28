@@ -287,7 +287,7 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePlaceProblem(Isometry3d& 
   jv->first_step = 0;
   jv->last_step = pci.basic_info.n_steps - 1;
   jv->targets = std::vector<double>(7, 0.0);
-  jv->coeffs = std::vector<double>(7, 5.0);
+  jv->coeffs = std::vector<double>(7, 18.0);
   jv->name = "joint_velocity_cost";
 
   pci.cost_infos.push_back(jv);
