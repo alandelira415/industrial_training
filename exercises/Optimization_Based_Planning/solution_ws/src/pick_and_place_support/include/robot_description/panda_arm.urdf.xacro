@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="panda">
+  <xacro:arg name="arm_id" default="panda"/> <!-- Name of this panda -->
+  <xacro:arg name="suction_ee" default="true"/>
+  <xacro:arg name="robot_ip" default=""/> <!-- IP address or hostname of the robot" -->
+  <xacro:arg name="use_fake_hardware" default="false"/>
+  <xacro:arg name="fake_sensor_commands" default="false"/>
+
+  <xacro:include filename="$(find pick_and_place_support)/include/robot_description/panda_arm.xacro"/>
+  <xacro:panda_arm arm_id="$(arg arm_id)" safety_distance="0.01"/>
+
+  <xacro:if value="$(arg suction_ee)">
+    <xacro:include filename="$(find pick_and_place_support)/include/robot_description/suction_ee.xacro"/>
+    <xacro:suction_ee ns="$(arg arm_id)" rpy="0 0 0" connected_to="$(arg arm_id)_link8" safety_distance="0.02"/>
+  </xacro:if>
+
+  <xacro:include filename="$(find pick_and_place_support)/include/robot_description/oak_d.xacro"/>
+  <xacro:oak_d id="case_cam" rpy="0.375 0 0" xyz="0.1637786 -0.5589 0.736" connected_to="panda_link0"/>
+  <xacro:oak_d id="fine_shelf_cam" rpy="${pi/2} 0 0" xyz=".2189801 -0.04 0.127" connected_to="panda_link0"/>
+  <!--<xacro:include filename="$(find pick_and_place_support)/config/panda_arm.ros2_control.xacro"/>
+  <xacro:panda_arm_ros2_control ns="$(arg arm_id)" robot_ip="$(arg robot_ip)" use_fake_hardware="$(arg use_fake_hardware)" fake_sensor_commands="$(arg fake_sensor_commands)"/> -->
+</robot>

@@ -159,7 +159,7 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePickProblem(Isometry3d& a
   collision->first_step = 0;
   collision->last_step = pci.basic_info.n_steps - 1;
   collision->gap = 1;
-  collision->info = createSafetyMarginDataVector(pci.basic_info.n_steps, 0.025, 40);
+  collision->info = createSafetyMarginDataVector(pci.basic_info.n_steps, 0.050, 40);
 
   pci.cost_infos.push_back(collision);
 
@@ -287,7 +287,7 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePlaceProblem(Isometry3d& 
   jv->first_step = 0;
   jv->last_step = pci.basic_info.n_steps - 1;
   jv->targets = std::vector<double>(7, 0.0);
-  jv->coeffs = std::vector<double>(7, 18.0);
+  jv->coeffs = std::vector<double>(7, 5.0);
   jv->name = "joint_velocity_cost";
 
   pci.cost_infos.push_back(jv);

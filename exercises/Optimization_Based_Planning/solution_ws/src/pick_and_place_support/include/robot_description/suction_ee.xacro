@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="suction_ee">
+  <!-- safety_distance: Minimum safety distance in [m] by which the collision volumes are expanded and which is enforced during robot motions -->
+  <xacro:macro name="suction_ee" params="connected_to:='' ns:='' rpy:='0 0 0' xyz:='0 0 0' safety_distance:=0">
+    <xacro:unless value="${connected_to == ''}">
+      <joint name="${ns}_suction_ee_joint" type="fixed">
+        <parent link="${connected_to}"/>
+        <child link="${ns}_suction_ee"/>
+        <origin xyz="${xyz}" rpy="${rpy}"/>
+      </joint>
+    </xacro:unless>
+    <link name="${ns}_suction_ee">
+      <visual>
+        <origin xyz="-0.03429 0.03429 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <mesh filename="package://pick_and_place_support/include/robot_description/suction_ee.stl"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${0.091154/2}" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.03429" length="0.091154" />
+        </geometry>
+      </collision>
+    </link>
+    <!-- Define the hand_tcp frame. This is a virtual  -->
+    <link name="${ns}_ee_tcp" />
+    <joint name="${ns}_hand_tcp_joint" type="fixed">
+      <origin xyz="0 0 0.091154" rpy="0 0 0" />
+      <parent link="${ns}_suction_ee" />
+      <child link="${ns}_ee_tcp" />
+    </joint>
+  </xacro:macro>
+</robot>

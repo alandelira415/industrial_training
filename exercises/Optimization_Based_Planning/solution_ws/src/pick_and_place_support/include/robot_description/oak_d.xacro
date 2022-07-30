@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="suction_ee">
+  <!-- safety_distance: Minimum safety distance in [m] by which the collision volumes are expanded and which is enforced during robot motions -->
+  <xacro:macro name="oak_d" params="connected_to:='' rpy:='0 0 0' xyz:='0 0 0' safety_distance:=0 id:='oak_d_default'">
+    <xacro:unless value="${connected_to == ''}">
+      <joint name="${id}_joint" type="fixed">
+        <parent link="${connected_to}"/>
+        <child link="${id}"/>
+        <origin xyz="${xyz}" rpy="${rpy}"/>
+      </joint>
+    </xacro:unless>
+    <link name="${id}">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 ${pi} 0"/>
+        <geometry>
+          <mesh filename="package://pick_and_place_support/include/robot_description/oak-d-camera.stl"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <sphere radius="0.03429" />
+        </geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+</robot>

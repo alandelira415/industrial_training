@@ -282,6 +282,8 @@ int main(int argc, char** argv)
 
     // Set the parameters
     tesseract::tesseract_planning::TrajOptPlannerConfig config_place(place_prob);
+    //reducing min trust box size allows more optimization iterations to occur and can result in eliminating collisions 
+    config_place.params.min_trust_box_size = 0.000001
     config_place.params.max_iter = 500;
 
     // Create Plot Callback (optional)
