@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="suction_ee">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="panda">
   <!-- safety_distance: Minimum safety distance in [m] by which the collision volumes are expanded and which is enforced during robot motions -->
   <xacro:macro name="oak_d" params="connected_to:='' rpy:='0 0 0' xyz:='0 0 0' safety_distance:=0 id:='oak_d_default'">
     <xacro:unless value="${connected_to == ''}">

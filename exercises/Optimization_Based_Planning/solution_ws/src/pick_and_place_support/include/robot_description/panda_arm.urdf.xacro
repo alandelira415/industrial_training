@@ -1,13 +1,33 @@
 <?xml version='1.0' encoding='utf-8'?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="panda">
+  <link name="world"/>
+  <link name="base_link"/>
+
   <xacro:arg name="arm_id" default="panda"/> <!-- Name of this panda -->
   <xacro:arg name="suction_ee" default="true"/>
   <xacro:arg name="robot_ip" default=""/> <!-- IP address or hostname of the robot" -->
   <xacro:arg name="use_fake_hardware" default="false"/>
   <xacro:arg name="fake_sensor_commands" default="false"/>
 
+  <!-- Include workcell (creates joint from world to workcell_base)-->
+  <xacro:include filename="$(find pick_and_place_support)/urdf/environment.xacro"/>
+  <xacro:workcell parent_link="world" >
+    <origin xyz="0.0 0.0 0.77153" rpy="0 0 0"/>
+  </xacro:workcell >
+
+  <xacro:cabinet id="1" parent_link="workcell_base" >
+    <origin rpy="0 0 0" xyz="-0.3048 1.016 0.771525"/>
+  </xacro:cabinet >
+
+  <!-- Create joints -->
+  <joint name="workcell_base_to_base" type="fixed">
+    <parent link="workcell_base"/>
+    <child link="base_link"/>
+    <origin xyz="0 -0.0381 0.00953" rpy="0 0 1.5708"/>
+  </joint>
+
   <xacro:include filename="$(find pick_and_place_support)/include/robot_description/panda_arm.xacro"/>
-  <xacro:panda_arm arm_id="$(arg arm_id)" safety_distance="0.01"/>
+  <xacro:panda_arm arm_id="$(arg arm_id)" connected_to="base_link" safety_distance="0.01"/>
 
   <xacro:if value="$(arg suction_ee)">
     <xacro:include filename="$(find pick_and_place_support)/include/robot_description/suction_ee.xacro"/>

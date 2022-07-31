@@ -60,9 +60,13 @@ int main(int argc, char** argv)
 
   // TODO: Replace with xacro
   std::string urdf_file = pnh.param<std::string>("urdf_path",
-                                                 ros::package::getPath("pick_and_place_support") + "/urdf/"
-                                                                                                   "pick_and_place."
+                                                 ros::package::getPath("pick_and_place_support") + "/include/robot_description/"
+                                                                                                   "panda_arm."
                                                                                                    "urdf");
+  // std::string urdf_file = pnh.param<std::string>("urdf_path",
+  //                                                ros::package::getPath("pick_and_place_support") + "/urdf/"
+  //                                                                                                  "pick_and_place."
+  //                                                                                                  "urdf");
   std::string base_frame = pnh.param<std::string>("base_frame", "world");
   std::string camera_frame = argv[2];
 

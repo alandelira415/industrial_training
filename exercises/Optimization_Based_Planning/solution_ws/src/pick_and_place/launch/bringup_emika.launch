@@ -19,7 +19,7 @@
     <param name="robot_description"  command="$(find xacro)/xacro --inorder $(find pick_and_place_support)/include/robot_description/panda_arm.urdf.xacro"/>
 
     <!-- Load Robot Semantic -->
-    <param name="robot_description"  command="$(find xacro)/xacro --inorder $(find pick_and_place_support)/include/robot_semantic_description/panda_arm.srdf.xacro"/>
+    <param name="robot_description_semantic"  command="$(find xacro)/xacro --inorder $(find pick_and_place_support)/include/robot_semantic_description/panda_arm.srdf.xacro"/>
 
     <!-- Launch Simulated robot -->
     <group if="$(arg sim_robot)">

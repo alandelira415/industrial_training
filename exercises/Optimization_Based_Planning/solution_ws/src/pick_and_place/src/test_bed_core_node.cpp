@@ -125,6 +125,13 @@ int main(int argc, char** argv)
     ROS_ERROR("Failed to find pick location");
     plan = false;
   }
+  plan=true;
+  box_size_x = 0.200125;
+  box_size_y = 0.200092;
+  box_size_z = 0.200300;
+  ROS_INFO("box sizex: %f", box_size_x);
+  ROS_INFO("box sizey: %f", box_size_y);
+  ROS_INFO("box sizez: %f", box_size_z);
 
   // attach the simulated box in correct location
   tesseract::AttachableObjectPtr obj(new tesseract::AttachableObject());
