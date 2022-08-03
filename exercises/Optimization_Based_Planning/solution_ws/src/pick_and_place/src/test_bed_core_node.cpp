@@ -74,26 +74,27 @@ int main(int argc, char** argv)
   // The initial robot position
   if (sim_robot)
   {
-    joint_states["iiwa_joint_1"] = 0.0;
-    joint_states["iiwa_joint_2"] = 0.0;
-    joint_states["iiwa_joint_3"] = 0.0;
-    joint_states["iiwa_joint_4"] = -1.57;
-    joint_states["iiwa_joint_5"] = 0.0;
-    joint_states["iiwa_joint_6"] = 0.0;
-    joint_states["iiwa_joint_7"] = 0.0;
+    joint_states["panda_joint1"] = 0.0;
+    joint_states["panda_joint2"] = 0.0;
+    joint_states["panda_joint3"] = 0.0;
+    joint_states["panda_joint4"] = -1.57;
+    joint_states["panda_joint5"] = 0.0;
+    joint_states["panda_joint6"] = 0.0;
+    joint_states["panda_joint7"] = 0.0;
+    joint_states["panda_joint8"] = 0.0;
   }
   else
   {
     boost::shared_ptr<const iiwa_msgs::JointPosition> joint_pos =
         ros::topic::waitForMessage<iiwa_msgs::JointPosition>("iiwa/state/JointPosition", nh);
 
-    joint_states["iiwa_joint_1"] = joint_pos.get()->position.a1;
-    joint_states["iiwa_joint_2"] = joint_pos.get()->position.a2;
-    joint_states["iiwa_joint_3"] = joint_pos.get()->position.a3;
-    joint_states["iiwa_joint_4"] = joint_pos.get()->position.a4;
-    joint_states["iiwa_joint_5"] = joint_pos.get()->position.a5;
-    joint_states["iiwa_joint_6"] = joint_pos.get()->position.a6;
-    joint_states["iiwa_joint_7"] = joint_pos.get()->position.a7;
+    joint_states["panda_joint1"] = joint_pos.get()->position.a1;
+    joint_states["panda_joint2"] = joint_pos.get()->position.a2;
+    joint_states["panda_joint3"] = joint_pos.get()->position.a3;
+    joint_states["panda_joint4"] = joint_pos.get()->position.a4;
+    joint_states["panda_joint5"] = joint_pos.get()->position.a5;
+    joint_states["panda_joint6"] = joint_pos.get()->position.a6;
+    joint_states["panda_joint7"] = joint_pos.get()->position.a7;
   }
   env->setState(joint_states);
 
@@ -128,10 +129,10 @@ int main(int argc, char** argv)
   plan=true;
   box_size_x = 0.200125;
   box_size_y = 0.200092;
-  box_size_z = 0.200300;
-  ROS_INFO("box sizex: %f", box_size_x);
-  ROS_INFO("box sizey: %f", box_size_y);
-  ROS_INFO("box sizez: %f", box_size_z);
+  // box_size_z = 0.200300;
+  // ROS_INFO("box sizex: %f", box_size_x);
+  // ROS_INFO("box sizey: %f", box_size_y);
+  // ROS_INFO("box sizez: %f", box_size_z);
 
   // attach the simulated box in correct location
   tesseract::AttachableObjectPtr obj(new tesseract::AttachableObject());
@@ -177,7 +178,7 @@ int main(int argc, char** argv)
     Eigen::Quaterniond orientation(0.0, 0.0, 1.0, 0.0);
 
     std::string manip = "Manipulator";
-    std::string end_effector = "iiwa_link_ee";
+    std::string end_effector = "panda_ee_tcp";
     TrajoptPickAndPlaceConstructor prob_constructor(env, manip, end_effector, "box");
 
     // Define the final pose
@@ -248,7 +249,7 @@ int main(int argc, char** argv)
 
     attached_body.parent_link_name = end_effector;
     attached_body.transform.translation() = Eigen::Vector3d(0, 0, box_size_z / 2.0 + gripper_offset);
-    attached_body.touch_links = { "iiwa_link_ee", end_effector };  // allow the box to contact the end effector
+    attached_body.touch_links = { "panda_ee_tcp", end_effector };  // allow the box to contact the end effector
     attached_body.touch_links = { "workcell_base",
                                   end_effector };  // allow the box to contact the table (since it's sitting on it)
 
@@ -292,6 +293,10 @@ int main(int argc, char** argv)
     //reducing min trust box size allows more optimization iterations to occur and can result in eliminating collisions 
     config_place.params.min_trust_box_size = 0.000001
     config_place.params.max_iter = 500;
+    config_place.params.trust_shrink_ratio = 0.4;
+    config_place.params.trust_expand_ratio = 3.0;
+    config_place.params.improve_ratio_threshold = 0.10;
+    config_place.params.merit_coeff_increase_ratio = 15.0;
 
     // Create Plot Callback (optional)
     if (plotting_cb)

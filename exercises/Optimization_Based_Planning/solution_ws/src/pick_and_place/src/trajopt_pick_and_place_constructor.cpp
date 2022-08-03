@@ -55,12 +55,7 @@ void TrajoptPickAndPlaceConstructor::addLinearMotion(trajopt::ProblemConstructio
 
   Quaterniond approach_rotation(start_pose.linear());
   Matrix3d rotation_diff = (start_pose.linear().inverse() * end_pose.linear());
-  AngleAxisd aa_rotation_diff(rotation_diff);
-  double angle_delta = aa_rotation_diff.angle() / (num_steps - 1);
-  Vector3d delta_axis = aa_rotation_diff.axis();
-
-  // Create a series of pose constraints for linear pick motion
-  for (int i = 0; i < num_steps; i++)
+  AngleAxisd aa_rotation_diff(rotation_diff);"panda_joint1"
   {
     /* Fill Code:
          . Create a new shared_ptr<StaticPoseCostInfo>
@@ -287,7 +282,7 @@ TrajOptProbPtr TrajoptPickAndPlaceConstructor::generatePlaceProblem(Isometry3d& 
   jv->first_step = 0;
   jv->last_step = pci.basic_info.n_steps - 1;
   jv->targets = std::vector<double>(7, 0.0);
-  jv->coeffs = std::vector<double>(7, 5.0);
+  jv->coeffs = std::vector<double>(7, 20.0);
   jv->name = "joint_velocity_cost";
 
   pci.cost_infos.push_back(jv);

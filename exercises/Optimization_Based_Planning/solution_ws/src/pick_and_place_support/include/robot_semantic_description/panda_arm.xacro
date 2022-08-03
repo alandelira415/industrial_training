@@ -7,6 +7,23 @@
     <xacro:group_definition arm_id="${arm_id}" group_name="${arm_id}_arm" tip_link="${arm_id}_ee_tcp"/>
 
     <virtual_joint name="virtual_joint" type="fixed" parent_frame="world" child_link="${arm_id}_link0"/>
+    <disable_collisions link1="cabinet_1" link2="${arm_id}_link0" reason="Never" />
+    <disable_collisions link1="cabinet_1" link2="${arm_id}_link1" reason="Never" />
+    <disable_collisions link1="cabinet_1" link2="${arm_id}_link2" reason="Never" />
+    <disable_collisions link1="cabinet_1" link2="${arm_id}_link3" reason="Never" />
+    <disable_collisions link1="cabinet_1" link2="${arm_id}_link4" reason="Never" />
+    <disable_collisions link1="cabinet_1" link2="workcell_base" reason="Adjacent" />
+
+    <disable_collisions link1="panda_link0" link2="workcell_base" reason="Adjacent" />
+    <disable_collisions link1="panda_link1" link2="workcell_base" reason="Adjacent" />
+    <disable_collisions link1="panda_link2" link2="workcell_base" reason="Adjacent" />
+    <disable_collisions link1="panda_link3" link2="workcell_base" reason="Adjacent" />
+    <disable_collisions link1="panda_link4" link2="workcell_base" reason="Adjacent" />
+    <disable_collisions link1="panda_link5" link2="workcell_base" reason="Adjacent" />
+    <disable_collisions link1="panda_link6" link2="workcell_base" reason="Adjacent" />
+    <disable_collisions link1="panda_link7" link2="workcell_base" reason="Adjacent" />
+    <disable_collisions link1="panda_link8" link2="workcell_base" reason="Adjacent" />
+
     <disable_collisions link1="${arm_id}_link0" link2="${arm_id}_link1" reason="Adjacent"/>
     <disable_collisions link1="${arm_id}_link0" link2="${arm_id}_link2" reason="Never"/>
     <disable_collisions link1="${arm_id}_link0" link2="${arm_id}_link3" reason="Never"/>
